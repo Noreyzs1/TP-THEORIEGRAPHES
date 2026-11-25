@@ -6,7 +6,7 @@ import java.util.*;
 public class tempDriska {
     private Lieu lieu;
     private boolean marque;
-    private Lieu parent;
+    private tempDriska parent;
     private double distance;
     private tempDriska successeurs;
 
@@ -14,13 +14,14 @@ public class tempDriska {
         this.lieu=lieu;
         marque = false;
         parent = null;
+        //Fonction double pour représenter la distance infini de base jusqu'au sommet S0
         distance = Double.POSITIVE_INFINITY;
     }
 
     public Lieu getLieu() {
         return this.lieu;
     }
-    public Lieu getParent() {
+    public tempDriska getParent() {
         return this.parent;
     }
     
@@ -36,6 +37,14 @@ public class tempDriska {
         return distance;
     }
 
+    public void setDistance(double distance){
+        this.distance=distance;
+    }
+
+    public void setParent(tempDriska parent) {
+        this.parent = parent;
+    }
+
     //Condition pour Driska tant qu'il reste des sommets non marqués a une distance provisoire non infinie
     public static boolean conditionDriszka(ArrayList<tempDriska> liste_marques_parents){
         for (tempDriska temp : liste_marques_parents){
@@ -46,16 +55,52 @@ public class tempDriska {
         return false;
     }
 
-    //Fonction qui renvoie le successeur avec le poids qui dans ce cas précis est l'altitude le plus petit
-    public static tempDriska marquerSMin(tempDriska buffer, ArrayList<tempDriska> l_Driskas){
-        // A completer
-        return null;
+    //Fonction qui va mettre a jour la distance des sommets qui sont liés a smin et mettre en parent smin si le chemin est plus court
+    public static void miseAJourDistance(tempDriska sMinDriska, ArrayList<tempDriska> l_Driskas){
+        for (Route temp : sMinDriska.getLieu().getRoutes()){
+            Lieu oppose = temp.getOppose(sMinDriska.getLieu());
+            tempDriska opposeDriska = getDriskaDepuisLieu(oppose, l_Driskas);
+            double distanceBuffer = sMinDriska.getDistance() + temp.getPoidsRoute(sMinDriska.getLieu());
+            if (distanceBuffer < opposeDriska.getDistance()){
+                opposeDriska.setDistance(distanceBuffer);
+                opposeDriska.setParent(sMinDriska);
+            }
+        }
     }
 
+    //Fonction qui marque et renvoie le tempDriska avec la plus petite distance et le marque
+    public static tempDriska marquerSMin(ArrayList<tempDriska> l_Driskas){
+        tempDriska retour = premierNonMarque(l_Driskas);
+        double distanceBuffer = retour.getDistance();
+        for (tempDriska d : l_Driskas ){
+            if ((d.getDistance() < distanceBuffer) && !d.getMarque() ){
+                retour = d;
+                distanceBuffer = d.getDistance();
+            }
+        }
+        if (retour != null){
+            retour.setMarqueTrue();
+        }
+        return retour;
+    }
+
+    //Remarque : Chatgpt a remarqué qu'en fait il y avait juste un Hashmap à faire plutot que cette fonction qui fait tout le tour d'une arraylist a chaque fois,
+    // à implémenter pour optimisation
+    
     public static tempDriska getDriskaDepuisLieu(Lieu lieu,ArrayList<tempDriska> l_Driskas){
         for (tempDriska temp : l_Driskas){
             if( temp.getLieu() == lieu ){
                 return temp;
+            }
+        }
+        return null;
+    }
+
+    //Fonction qui retourne le premier non marque a une distance non infinie
+    public static tempDriska premierNonMarque(ArrayList<tempDriska> l_Driskas){
+        for (tempDriska retour : l_Driskas){
+            if (retour.getMarque()==false && retour.getDistance()<Double.POSITIVE_INFINITY){
+                return retour;
             }
         }
         return null;

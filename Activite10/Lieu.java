@@ -4,28 +4,34 @@ import java.util.*;
 public class Lieu {
     int z;
     private ArrayList<Route> routes;
-    private boolean marque;
     private ArrayList<Lieu> successeurs;
 
-    public Lieu(int z,ArrayList<Route> routes){
-        this.marque = false;
+    public Lieu(int z){
         this.z = z;
-        this.routes = routes;
-        //Rajout des successeurs a partir de l'autre point d'une route
-        for (Route tempRoute : routes){
-            successeurs.add(tempRoute.getOppose(this));
-        }
-    }
-
-    public void setMarque(){
-        this.marque=true;
-    }
-
-    public void removeMarque(){
-        this.marque=false;
+        this.successeurs = new ArrayList<>();
+        this.routes = new ArrayList<>();
     }
 
     public ArrayList<Lieu> getSuccesseurs() {
         return successeurs;
+    }
+
+    public ArrayList<Route> getRoutes() {
+        return routes;
+    }
+
+    //Fonction qui renvoie la route si elle existe a partir d'un successeur non valable dans un multigraphe
+    public Route getRouteDepuisSucc(Lieu successeur){
+        for (Route routeRecherchee : routes ){
+            if (routeRecherchee.getOppose(successeur)!=null){
+                return routeRecherchee;
+            }
+        }
+        return null;
+    }
+
+    public void ajouterRoute(Route route){
+        routes.add(route);
+        successeurs.add(route.getOppose(this));
     }
 }
