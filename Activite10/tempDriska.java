@@ -8,6 +8,7 @@ public class tempDriska {
     private boolean marque;
     private Lieu parent;
     private double distance;
+    private tempDriska successeurs;
 
     public tempDriska(Lieu lieu){
         this.lieu=lieu;
@@ -47,19 +48,8 @@ public class tempDriska {
 
     //Fonction qui renvoie le successeur avec le poids qui dans ce cas précis est l'altitude le plus petit
     public static tempDriska marquerSMin(tempDriska buffer, ArrayList<tempDriska> l_Driskas){
-        ArrayList<Route> routes = buffer.getLieu().getRoutes();
-        int poidsMin = routes.get(0).getPoidsRoute(buffer.getLieu());
-        Lieu retour = new Lieu();
-        tempDriska retourDriska; 
-        for (Route route : routes){
-            if (route.getPoidsRoute(buffer.getLieu())<poidsMin){
-                poidsMin=route.getPoidsRoute(buffer.getLieu());
-                retour = route.getOppose(buffer.getLieu());
-            }
-        }
-        retourDriska = tempDriska.getDriskaDepuisLieu(retour, l_Driskas);
-        retourDriska.setMarqueTrue();
-        return retourDriska;
+        // A completer
+        return null;
     }
 
     public static tempDriska getDriskaDepuisLieu(Lieu lieu,ArrayList<tempDriska> l_Driskas){
