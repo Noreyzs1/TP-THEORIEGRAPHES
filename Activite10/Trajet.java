@@ -54,10 +54,10 @@ public class Trajet {
             //Tant qu'il y a un parent et donc que bufferParent n'est pas égal au départ
             while (bufferParent.getParent()!= null){
                 //Ajout  du dernier lieu dans la liste des lieux
-                parents.add(bufferParent.getLieu());
+                parents.addFirst(bufferParent.getLieu());
 
                 //Ajout de la route que relie le dernier lieu jusqu'a son parent
-                trajet.add(bufferParent.getLieu().getRouteDepuisSucc(bufferParent.getParent().getLieu()));
+                trajet.addFirst(bufferParent.getLieu().getRouteDepuisSucc(bufferParent.getParent().getLieu()));
                 bufferParent = bufferParent.getParent();
 
             }
